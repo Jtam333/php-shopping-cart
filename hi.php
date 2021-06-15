@@ -10,7 +10,7 @@ session_start();
 
 <head>
     <title>PHP Test</title>
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <!-- <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"> -->
 </head>
 
 <body>
@@ -91,12 +91,12 @@ session_start();
     
     class Cart
     {
-        public $productList = [];
+        public $cart = [];
 
         function __construct()
         {
-            if (isset($_SESSION['productList'])) {
-                $this->productList = $_SESSION['productList'];
+            if (isset($_SESSION['cart'])) {
+                $this->cart = $_SESSION['cart'];
             }
         }
 
@@ -105,7 +105,7 @@ session_start();
             global $products;
 
             //See if item already exists in cart. If it does, increase the quantity
-            foreach ($this->productList as $item) {
+            foreach ($this->cart as $item) {
                 if ($item->getName() == $name) {
                     $item->setQuantity($item->getQuantity() + 1);
                     return;
@@ -118,10 +118,10 @@ session_start();
 
             //Add new product to cart
             $cartItem = new CartItem($name, $newItemPrice);
-            $this->productList[] = $cartItem;
+            $this->cart[] = $cartItem;
 
             //Update the product list in server session
-            $_SESSION['productList'] = $this->productList;
+            $_SESSION['cart'] = $this->cart;
         }
 
         function deleteProduct()
@@ -131,10 +131,10 @@ session_start();
 
         function showCart()
         {
-            if (!$this->productList) {
+            if (!$this->cart) {
                 echo 'There are no items in your cart.';
             } else {
-                foreach ($this->productList as $item) {
+                foreach ($this->cart as $item) {
                     echo "<li>Item: {$item->getName()}, Price: {$item->getPrice()}, Quantity: {$item->getQuantity()}, Total: {$item->getTotalPrice()}</li>";
                 }
             };
