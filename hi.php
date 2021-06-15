@@ -33,36 +33,55 @@ session_start();
     ?>
 
     <?php
-    class Product
+    class CartItem
     {
         public string $name;
         public float $price;
         public int $quantity;
+        public float $totalPrice;
 
         function __construct($name, $price)
         {
             $this->name = $name;
             $this->price = $price;
+            $this->quantity = 1;
+            $this->totalPrice = $price;
         }
 
-        function get_name()
+        function getName()
         {
             return $this->name;
         }
 
-        function get_price()
+        function getPrice()
         {
             return $this->price;
         }
 
-        function get_quantity()
+        function setPrice($price)
+        {
+            $this->price = $price;
+        }
+
+        function getQuantity()
         {
             return $this->quantity;
         }
 
-        function set_quantity($quantity)
+        function setQuantity($quantity)
         {
             $this->quantity = $quantity;
+            $this->totalPrice = $this->price*$this->quantity;
+        }
+
+        function getTotalPrice()
+        {
+            return $this->totalPrice;
+        }
+
+        function setTotalPrice($price)
+        {
+            $this->price = $price;
         }
     }
 
@@ -72,29 +91,36 @@ session_start();
 
         function __construct()
         {
-            if(isset($_SESSION['productList'])){
+            if (isset($_SESSION['productList'])) {
                 $this->productList = $_SESSION['productList'];
             }
         }
 
-        function add_product_to_list($name, $price)
+        function addProduct($name)
         {
-            foreach($this->productList as $item){
-                if ($item->get_name() == $name){
-                    $item->set_quantity($item->get_quantity() + 1);
+            global $products;
+
+            //See if item already exists in cart. If it does, increase the quantity
+            foreach ($this->productList as $item) {
+                if ($item->getName() == $name) {
+                    $item->setQuantity($item->getQuantity() + 1);
                     return;
                 }
             }
-            $i = new Product($name, $price);
-            $i->set_quantity(1);
-            $this->productList[] = $i;
+
+            //Search for price in "product database
+            $newItem = array_search($name, array_column($products, 'name'));
+            $newItemPrice = $products[$newItem]['price'];
+
+            //Add new product to cart
+            $cartItem = new CartItem($name, $newItemPrice);
+            $this->productList[] = $cartItem;
+
+            //Update the product list in server session
             $_SESSION['productList'] = $this->productList;
-            //echo gettype($this->productList);
-            console_log('finished');
-            echo "<script>window.location.href='hi.php'</script>";
         }
 
-        function delete_product_from_list()
+        function deleteProduct()
         {
             //TODO
         }
@@ -105,9 +131,8 @@ session_start();
                 echo 'There are no items in your cart.';
             } else {
                 foreach ($this->productList as $item) {
-                    echo "<li>Item: {$item->get_name()}, Price: {$item->get_price()}, Quantity: {$item->get_quantity()}</li>";
+                    echo "<li>Item: {$item->getName()}, Price: {$item->getPrice()}, Quantity: {$item->getQuantity()}, Total: {$item->getTotalPrice()}</li>";
                 }
-                //console_log('showing');
             };
         }
     }
@@ -119,28 +144,18 @@ session_start();
 
         $myCart = new Cart();
 
-        function showProducts($arr, $cart)
+        function showProducts($arr)
         {
             foreach ($arr as $item) {
                 echo "<p>Item: {$item['name']}, Price: {$item['price']}</p>";
-                echo "<a href='?name={$item['name']}&price={$item['price']}'>Add this item to cart</a>";
-                //echo "<button type='submit' name='action' value={$item['name']}>Add this item to cart</button>";
-            }
-
-            if (isset($_POST['action']) && ($_POST['action'] == $item['name'])) {
-                //console_log('hi');
-                //echo "<p>'hi'</p>";
-                $cart->add_product_to_list($item['name'], $item['price']);
+                echo "<button type='submit' name='add' value={$item['name']}>Add this item to cart</button>";
             }
         }
 
         echo "<form method='POST' action=''>";
         showProducts($products, $myCart);
-        
-        if (isset($_GET['name'])) {
-            //console_log('hi');
-            echo "<p>'hi'</p>";
-            $myCart->add_product_to_list($_GET['name'],$_GET['price']);
+        if (isset($_POST['add'])) {
+            $myCart->addProduct($_POST['add']);
         }
         echo "</form>";
 
