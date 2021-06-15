@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 session_start();
 
 ?>
@@ -8,6 +10,7 @@ session_start();
 
 <head>
     <title>PHP Test</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -85,7 +88,7 @@ session_start();
             $this->price = $price;
         }
     }
-
+    
     class Cart
     {
         public $productList = [];
@@ -154,12 +157,18 @@ session_start();
         }
 
         echo "<form method='POST' action=''>";
+
         showProducts($products, $myCart);
+
         if (isset($_POST['add'])) {
             $myCart->addProduct($_POST['add']);
+            //POST redirect GET pattern, prevents duplicate form submissions
+            //https://stackoverflow.com/questions/4142809/simple-php-post-redirect-get-code-example
+            header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
+            exit();
         }
-        echo "</form>";
 
+        echo "</form>";
         ?>
 
     </div>
