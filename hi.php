@@ -79,8 +79,14 @@ session_start();
 
         function add_product_to_list($name, $price)
         {
-            console_log('hi');
+            foreach($this->productList as $item){
+                if ($item->get_name() == $name){
+                    $item->set_quantity($item->get_quantity() + 1);
+                    return;
+                }
+            }
             $i = new Product($name, $price);
+            $i->set_quantity(1);
             $this->productList[] = $i;
             $_SESSION['productList'] = $this->productList;
             //echo gettype($this->productList);
@@ -99,7 +105,7 @@ session_start();
                 echo 'There are no items in your cart.';
             } else {
                 foreach ($this->productList as $item) {
-                    echo "<li>Item: {$item->get_name()}, Price: {$item->get_price()}</li>";
+                    echo "<li>Item: {$item->get_name()}, Price: {$item->get_price()}, Quantity: {$item->get_quantity()}</li>";
                 }
                 //console_log('showing');
             };
