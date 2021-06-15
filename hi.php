@@ -12,6 +12,7 @@ session_start();
 
 <body>
     <?php
+    //"Product database"
     $products = [
         ["name" => "Sledgehammer", "price" => 125.75],
         ["name" => "Axe",          "price" => 190.50],
@@ -55,7 +56,7 @@ session_start();
 
         function getPrice()
         {
-            return $this->price;
+            return number_format($this->price, 2);
         }
 
         function setPrice($price)
@@ -76,7 +77,7 @@ session_start();
 
         function getTotalPrice()
         {
-            return $this->totalPrice;
+            return number_format($this->totalPrice, 2);
         }
 
         function setTotalPrice($price)
