@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-require_once('cart.php');
-require_once('productBase.php');
+require_once('classes/cart.php');
+require_once('database/productBase.php');
 
 session_start();
 ?>
