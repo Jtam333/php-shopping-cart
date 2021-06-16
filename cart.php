@@ -9,11 +9,13 @@ class Cart
 {
     //TODO: hash objects in cart with SplObjectStorage to allow for easy array manipulation
     public $cart = [];
+    public float $totalPrice;
 
     function __construct()
     {
         if (isset($_SESSION['cart'])) {
             $this->cart = $_SESSION['cart'];
+            $this->totalPrice = $_SESSION['totalPrice'];
         }
     }
 
@@ -22,12 +24,30 @@ class Cart
         return $this->cart;
     }
 
+    function getTotalPrice(){
+        return $this->totalPrice;
+    }
+
+    function updateTotalPrice(){
+        $prices = [];
+        foreach ($this->cart as $item){
+            $prices[] = $item->getTotalPrice();
+        }
+        $this->totalPrice = array_sum($prices);
+    }
+
     function addProduct($name)
     {
         //See if item already exists in cart. If it does, only increase the quantity.
         foreach ($this->cart as $item) {
             if ($item->getName() == $name) {
                 $item->setQuantity($item->getQuantity() + 1);
+
+                $this->updateTotalPrice();
+
+                //Update the product list in server session
+                $_SESSION['cart'] = $this->cart;
+                $_SESSION['totalPrice'] = $this->totalPrice;
                 return;
             }
         }
@@ -42,8 +62,12 @@ class Cart
         $cartItem = new CartItem($name, $newItemPrice);
         $this->cart[] = $cartItem;
 
-        //Update the product list in server session
+        $this->updateTotalPrice();
+
+        //Update the product list and total price in server session
         $_SESSION['cart'] = $this->cart;
+        $_SESSION['totalPrice'] = $this->totalPrice;
+
     }
 
     function deleteProduct($name)
@@ -56,8 +80,10 @@ class Cart
                 break;
             }
         }
+        $this->updateTotalPrice();
 
         //Update the product list in server session
         $_SESSION['cart'] = $this->cart;
+        $_SESSION['totalPrice'] = $this->totalPrice;
     }
 }

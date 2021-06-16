@@ -56,8 +56,11 @@ session_start();
                 echo "<li>Item: {$item->getName()}, Price: {$item->getPrice()}, Quantity: {$item->getQuantity()}, Total: {$item->getTotalPrice()}</li>";
                 echo "<button type='submit' name='delete' value={$item->getname()}>Remove this item from cart</button>";
             }
+            echo "<p>Total: {$myCart->getTotalPrice()}</p>";
+
         };
         echo "</form>";
+
 
         //$_POST['delete'] holds the value of the item's name, from the button.
         if (isset($_POST['delete'])) {

@@ -25,7 +25,7 @@ class CartItem
 
         function getPrice()
         {
-            return number_format($this->price, 2);
+            return $this->price;
         }
 
         function setPrice($price)
@@ -46,7 +46,7 @@ class CartItem
 
         function getTotalPrice()
         {
-            return number_format($this->totalPrice, 2);
+            return $this->totalPrice;
         }
 
         function setTotalPrice($price)
