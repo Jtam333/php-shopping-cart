@@ -1,4 +1,6 @@
 <?php
+require_once('cartItem.php');
+
 class Cart
     {
         public $cart = [];
@@ -50,4 +52,3 @@ class Cart
             };
         }
     }
-?>
