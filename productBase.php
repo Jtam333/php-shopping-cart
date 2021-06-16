@@ -1,5 +1,4 @@
 <?php
-
 //"Product database"
 $products = [
     ["name" => "Sledgehammer", "price" => 125.75],
@@ -21,7 +20,8 @@ function console_log($output, $with_script_tags = true)
 
 
 //Dummy function to mimic getting products from "database"
-function getProducts(){
+function getProducts()
+{
     global $products;
     return $products;
 }

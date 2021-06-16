@@ -24,16 +24,24 @@ class Cart
         return $this->cart;
     }
 
-    function getTotalPrice(){
+    function getTotalPrice()
+    {
         return $this->totalPrice;
     }
 
-    function updateTotalPrice(){
+    private function updateTotalPrice()
+    {
         $prices = [];
-        foreach ($this->cart as $item){
+        foreach ($this->cart as $item) {
             $prices[] = $item->getTotalPrice();
         }
         $this->totalPrice = array_sum($prices);
+    }
+
+    private function storeCartInfoInSession()
+    {
+        $_SESSION['cart'] = $this->cart;
+        $_SESSION['totalPrice'] = $this->totalPrice;
     }
 
     function addProduct($name)
@@ -43,11 +51,9 @@ class Cart
             if ($item->getName() == $name) {
                 $item->setQuantity($item->getQuantity() + 1);
 
+                // Update cart info
                 $this->updateTotalPrice();
-
-                //Update the product list in server session
-                $_SESSION['cart'] = $this->cart;
-                $_SESSION['totalPrice'] = $this->totalPrice;
+                $this->storeCartInfoInSession();
                 return;
             }
         }
@@ -62,12 +68,9 @@ class Cart
         $cartItem = new CartItem($name, $newItemPrice);
         $this->cart[] = $cartItem;
 
+        // Update cart info
         $this->updateTotalPrice();
-
-        //Update the product list and total price in server session
-        $_SESSION['cart'] = $this->cart;
-        $_SESSION['totalPrice'] = $this->totalPrice;
-
+        $this->storeCartInfoInSession();
     }
 
     function deleteProduct($name)
@@ -80,10 +83,9 @@ class Cart
                 break;
             }
         }
-        $this->updateTotalPrice();
 
-        //Update the product list in server session
-        $_SESSION['cart'] = $this->cart;
-        $_SESSION['totalPrice'] = $this->totalPrice;
+        // Update cart info
+        $this->updateTotalPrice();
+        $this->storeCartInfoInSession();
     }
 }
