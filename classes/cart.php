@@ -1,6 +1,5 @@
 <?php
 require_once('cartItem.php');
-require_once('database/productBase.php');
 
 /**
  * Cart is a class for a shopping cart.
