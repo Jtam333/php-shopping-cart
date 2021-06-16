@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * CartItem is a class for modelling each unique product in the cart.
+ */
 class CartItem
     {
         public string $name;

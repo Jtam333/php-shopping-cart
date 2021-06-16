@@ -46,7 +46,27 @@ session_start();
     <!-- for the cart -->
     <div>
         <?php
-        $myCart->showCart();
+        echo "<form method='POST' action=''>";
+        $cartList = $myCart->getCart();
+        console_log(gettype($cartList));
+        if (!$cartList) {
+            echo 'There are no items in your cart.';
+        } else {
+            foreach ($cartList as $item) {
+                echo "<li>Item: {$item->getName()}, Price: {$item->getPrice()}, Quantity: {$item->getQuantity()}, Total: {$item->getTotalPrice()}</li>";
+                echo "<button type='submit' name='delete' value={$item->getname()}>Remove this item from cart</button>";
+            }
+        };
+        echo "</form>";
+
+        //$_POST['delete'] holds the value of the item's name, from the button.
+        if (isset($_POST['delete'])) {
+            $myCart->deleteProduct($_POST['delete']);
+            //POST redirect GET pattern, prevents duplicate form submissions
+            //https://stackoverflow.com/questions/4142809/simple-php-post-redirect-get-code-example
+            header("Location: {$_SERVER['REQUEST_URI']}", true, 303);
+            exit();
+        }
         ?>
     </div>
 </body>
