@@ -1,5 +1,6 @@
 <?php
 require_once('cartItem.php');
+require_once('productBase.php');
 
 class Cart
     {
@@ -14,8 +15,6 @@ class Cart
 
         function addProduct($name)
         {
-            global $products;
-
             //See if item already exists in cart. If it does, increase the quantity
             foreach ($this->cart as $item) {
                 if ($item->getName() == $name) {
@@ -25,8 +24,11 @@ class Cart
             }
 
             //Search for price in "product database
-            $newItem = array_search($name, array_column($products, 'name'));
-            $newItemPrice = $products[$newItem]['price'];
+            console_log('hi1');
+            $productList = getProducts();
+            console_log('hi');
+            $newItem = array_search($name, array_column($productList, 'name'));
+            $newItemPrice = $productList[$newItem]['price'];
 
             //Add new product to cart
             $cartItem = new CartItem($name, $newItemPrice);
