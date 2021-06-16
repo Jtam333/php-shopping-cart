@@ -27,7 +27,8 @@ session_start();
 
         echo "<form method='POST' action=''>";
         foreach ($productList as $item) {
-            echo "<p>Item: {$item['name']}, Price: {$item['price']}</p>";
+            echo "<p>Item: {$item['name']}</p>";
+            echo '<p>Price: ' . number_format($item['price'], 2) . '</p>';
             echo "<button type='submit' name='add' value={$item['name']}>Add this item to cart</button>";
         }
         echo "</form>";
@@ -53,11 +54,13 @@ session_start();
             echo 'There are no items in your cart.';
         } else {
             foreach ($cartList as $item) {
-                echo "<li>Item: {$item->getName()}, Price: {$item->getPrice()}, Quantity: {$item->getQuantity()}, Total: {$item->getTotalPrice()}</li>";
+                echo "<li>Item: {$item->getName()}</li>";
+                echo '<li>Price: ' . number_format($item->getPrice(), 2) . '</li>';
+                echo "<li>Quantity: {$item->getQuantity()}</li>";
+                echo '<li>Total: ' . number_format($item->getTotalPrice(), 2) . '</li>';
                 echo "<button type='submit' name='delete' value={$item->getname()}>Remove this item from cart</button>";
             }
-            echo "<p>Total: {$myCart->getTotalPrice()}</p>";
-
+            echo '<p>Total: ' . number_format($myCart->getTotalPrice(), 2) . '</p>';
         };
         echo "</form>";
 
