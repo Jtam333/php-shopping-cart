@@ -39,4 +39,4 @@ php -S localhost:3000
 
 ## Screenshot
 
-![Screenshot](assets/Example.jpg)
+![Screenshot](assets/example.jpg)
